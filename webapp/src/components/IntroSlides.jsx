@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import LoadingScreen from './LoadingScreen'
-const stars = new URL('../assets/stars.png', import.meta.url).href
 
-// 🎧 Звуки из public
+const stars = new URL('../assets/stars.png', import.meta.url).href
 const introSound = new Audio('/sounds/bg.mp3')
 const clickSound = new Audio('/sounds/click.mp3')
 
@@ -36,9 +35,7 @@ export default function IntroSlides() {
       if (!hasPlayed.current) {
         introSound.volume = 0.3
         introSound.loop = true
-        introSound.play().catch(() => {
-          console.warn('🔇 Фоновый звук не воспроизводится')
-        })
+        introSound.play().catch(() => {})
         hasPlayed.current = true
       }
     }
@@ -55,31 +52,23 @@ export default function IntroSlides() {
 
   useEffect(() => {
     if (!autoSlide) return
-
     const autoTimer = setTimeout(() => {
-      if (index < slides.length - 1) {
-        setIndex(index + 1)
-      }
+      if (index < slides.length - 1) setIndex(index + 1)
     }, 6000)
-
     return () => clearTimeout(autoTimer)
   }, [index, autoSlide])
 
   const nextSlide = () => {
     clickSound.volume = 0.3
     clickSound.play().catch(() => {})
-
-    if (index < slides.length - 1) {
-      setIndex(index + 1)
-    } else {
-      // переход к следующему шагу
+    if (index < slides.length - 1) setIndex(index + 1)
+    else {
+      // переход к следующему этапу
     }
   }
 
   const prevSlide = () => {
-    if (index > 0) {
-      setIndex(index - 1)
-    }
+    if (index > 0) setIndex(index - 1)
   }
 
   const handleTouchStart = (e) => {
@@ -104,24 +93,39 @@ export default function IntroSlides() {
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-sm sm:max-w-md text-center z-10 bg-white/10 backdrop-blur-2xl p-6 sm:p-10 rounded-2xl shadow-2xl border-none"
+          className="absolute inset-0 flex flex-col justify-between items-center text-white p-6 sm:p-10 z-10"
         >
-          <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white drop-shadow">
+          <motion.h1
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-3xl sm:text-6xl font-extrabold drop-shadow text-left self-start"
+          >
             {slides[index].title}
-          </h1>
-          <p className="text-sm sm:text-lg text-white/70 mb-6">
+          </motion.h1>
+
+          <motion.p
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-md sm:text-xl text-white/80 text-center max-w-md"
+          >
             {slides[index].description}
-          </p>
-          <button
+          </motion.p>
+
+          <motion.button
             onClick={nextSlide}
-            className="px-6 py-2 sm:px-8 sm:py-3 bg-white/10 text-white font-medium rounded-xl backdrop-blur-md hover:bg-white/20 transition-all duration-300 shadow-md active:scale-95"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="px-6 py-2 sm:px-8 sm:py-3 bg-white/10 text-white font-semibold rounded-xl backdrop-blur-md hover:bg-white/20 transition-all duration-300 shadow-lg active:scale-95"
           >
             {index < slides.length - 1 ? 'Продолжить' : 'Начать'}
-          </button>
+          </motion.button>
         </motion.div>
       </AnimatePresence>
     </div>
