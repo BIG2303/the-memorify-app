@@ -1,7 +1,5 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useEffect, useRef, useState } from 'react'
-import { Sphere } from '@react-three/drei'
-import * as THREE from 'three'
 
 function FloatingCapsule({ position }) {
   const ref = useRef()
@@ -51,7 +49,6 @@ function FloatingCapsule({ position }) {
 }
 
 export default function CapsuleScene() {
-  // Случайные координаты капсул
   const positions = Array.from({ length: 15 }, () => [
     (Math.random() - 0.5) * 6,
     (Math.random() - 0.5) * 4,
@@ -59,7 +56,10 @@ export default function CapsuleScene() {
   ])
 
   return (
-    <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+    <Canvas
+      camera={{ position: [0, 0, 5], fov: 75 }}
+      gl={{ preserveDrawingBuffer: true }}
+    >
       <ambientLight intensity={1.2} />
       <pointLight position={[5, 5, 5]} intensity={2} color="#f7f7f7" />
       {positions.map((pos, idx) => (
