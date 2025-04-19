@@ -57,9 +57,10 @@ export default function CapsuleScene() {
 
   return (
     <Canvas
+      className="absolute inset-0 z-0"
       camera={{ position: [0, 0, 5], fov: 75 }}
       gl={{ preserveDrawingBuffer: true }}
-    >
+    >  
       <ambientLight intensity={1.2} />
       <pointLight position={[5, 5, 5]} intensity={2} color="#f7f7f7" />
       {positions.map((pos, idx) => (
