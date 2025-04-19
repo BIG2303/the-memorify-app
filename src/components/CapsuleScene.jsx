@@ -8,10 +8,11 @@ function FloatingCapsule({ position }) {
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
+    if (!ref.current) return
+
     ref.current.rotation.y += 0.002
     ref.current.position.y = position[1] + Math.sin(t + position[0]) * 0.1
 
-    // Параллакс
     const mouseX = state.mouse.x
     const mouseY = state.mouse.y
     ref.current.rotation.x = mouseY * 0.2
@@ -19,7 +20,6 @@ function FloatingCapsule({ position }) {
   })
 
   useEffect(() => {
-    // Анимация появления
     let frame
     const animate = () => {
       setOpacity((prev) => {
@@ -49,11 +49,35 @@ function FloatingCapsule({ position }) {
 }
 
 export default function CapsuleScene() {
+  const [webglSupported, setWebglSupported] = useState(true)
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas')
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+      if (!gl) {
+        console.warn("WebGL not supported")
+        setWebglSupported(false)
+      }
+    } catch (e) {
+      console.error("WebGL check failed", e)
+      setWebglSupported(false)
+    }
+  }, [])
+
   const positions = Array.from({ length: 15 }, () => [
     (Math.random() - 0.5) * 6,
     (Math.random() - 0.5) * 4,
     (Math.random() - 0.5) * 3,
   ])
+
+  if (!webglSupported) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <p className="text-white/50 text-sm">Ваше устройство не поддерживает WebGL 😢</p>
+      </div>
+    )
+  }
 
   return (
     <Canvas
