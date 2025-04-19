@@ -2,10 +2,14 @@ import CapsuleScene from './components/CapsuleScene'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      <CapsuleScene />
+    <div className="relative w-screen h-screen overflow-hidden bg-black text-white font-manrope">
+      {/* 3D сцена — позади */}
+      <div className="absolute inset-0 z-0">
+        <CapsuleScene />
+      </div>
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-4">
+      {/* Контент поверх сцены */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
         <h1 className="text-4xl sm:text-6xl font-extrabold text-white/90 backdrop-blur-xl px-4 py-2 rounded-xl shadow-lg">
           Добро пожаловать в <span className="text-white">The Memorify</span>
         </h1>
